@@ -7,6 +7,7 @@ import Login from '@/components/Login'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',// Vue 中配置的路由默认是 hash 模式 这里修改为  history
   routes: [
     // 下面都是固定的写法
     {
@@ -17,7 +18,10 @@ export default new Router({
     {
       path: '/index',
       name: 'AppIndex',
-      component: AppIndex
+      component: AppIndex,
+      meta: {
+        requireAuth: true
+      }
     }
   ]
 })
