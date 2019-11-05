@@ -3,7 +3,7 @@
     <el-row style="height: 840px;">
       <!--<search-bar></search-bar>-->
       <el-tooltip effect="dark" placement="right"
-                  v-for="item in books.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+                  v-for="item in books"
                   :key="item.id">
         <p slot="content" style="font-size: 14px;margin-bottom: 6px;">{{item.title}}</p>
         <p slot="content" style="font-size: 13px;margin-bottom: 6px">
@@ -27,9 +27,14 @@
       </el-tooltip>
     </el-row>
     <el-row>
+      <!--@current-change="handleCurrentChange"-->
       <el-pagination
+        @current-change= "handleCurrentChange"
+        @size-change= "handleSizeChange"
         :current-page= "currentPage"
+        :page-sizes="[2, 4, 6, 8]"
         :page-size= "pageSize"
+        layout="total,sizes, prev, pager, next"
         :total= "books.length">
       </el-pagination>
     </el-row>
@@ -44,18 +49,33 @@
       return {
         books: [],
         currentPage: 1,
-        pageSize: 17
+        pageSize: 2,
+        total: 20
       }
     },
     mounted: function () {
       this.loadBooks()
     },
     methods: {
+      handleSizeChange(val){
+        var _this = this
+        _this.pageSize = val;
+        _this.loadBooks();
+      },
+      handleCurrentChange(val){
+        var _this = this
+        _this.currentPage = val;
+        _this.loadBooks();
+      },
       loadBooks () {
         var _this = this
-        this.$axios.get('/books').then(resp => {
+        this.$axios.post('/books', {
+          currentPage: this.currentPage,
+          pageSize: this.pageSize
+        }).then(resp => {
           if (resp && resp.status === 200) {
-            _this.books = resp.data
+            _this.books = resp.data.data
+            _this.total = resp.data.total
           }
         })
       }
