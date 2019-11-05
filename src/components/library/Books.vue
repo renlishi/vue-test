@@ -35,7 +35,7 @@
         :page-sizes="[2, 4, 6, 8]"
         :page-size= "pageSize"
         layout="total,sizes, prev, pager, next"
-        :total= "books.length">
+        :total= "total">
       </el-pagination>
     </el-row>
   </div>
@@ -69,10 +69,11 @@
       },
       loadBooks () {
         var _this = this
-        this.$axios.post('/books', {
+        this.$axios.post('/library/books', {
           currentPage: this.currentPage,
           pageSize: this.pageSize
         }).then(resp => {
+          console.log(resp)
           if (resp && resp.status === 200) {
             _this.books = resp.data.data
             _this.total = resp.data.total
