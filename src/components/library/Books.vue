@@ -73,7 +73,6 @@
           currentPage: this.currentPage,
           pageSize: this.pageSize
         }).then(resp => {
-          console.log(resp)
           if (resp && resp.status === 200) {
             _this.books = resp.data.data
             _this.total = resp.data.total
